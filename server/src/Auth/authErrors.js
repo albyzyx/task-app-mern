@@ -1,11 +1,15 @@
 const authError = {
-  emailAlreadyExist: "AUTH/EMAIL_ALREADY_EXIST",
-  invalidEmail: "AUTH/INVALID_EMAIL",
-  passwordTooShort: "AUTH/PASSWORD_TOO_SHORT",
-  emailDoesNotExist: "AUTH/EMAIL_DOES_NOT_EXIST",
-  invalidCredentials: "AUTH/INVALID_CREDENTIALS",
+  emailAlreadyExist: "auth/email-already-exist",
+  invalidEmail: "auth/invalid-email",
+  passwordTooShort: "auth/password-too-short",
+  emailDoesNotExist: "auth/invalid-credentials",
+  invalidCredentials: "auth/invalid-credentials",
+  notAuthenticated: "auth/request-not-authenticated",
   connectionError: "AUTH/CONNECTION_ERROR",
-  internalServerError: "AUTH/INTERNAL_SERVER_ERROR",
+  internalServerError: "server/internal-server-error",
+  displayNameMissing: "request/display-name-required",
+  passwordMissing: "request/password-required",
+  emailMissing: "request/email-required",
 };
 //TODO: Bad request
 module.exports = authError;

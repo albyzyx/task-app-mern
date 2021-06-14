@@ -16,14 +16,10 @@ class Auth {
         })
         .catch((error) => {
           if (error.keyValue && error.keyValue.email !== undefined) {
-            reject(authError.emailAlreadyExist);
-          } else if (error.errors && error.errors.password !== undefined) {
-            reject(authError.passwordTooShort);
-          } else if (error.errors && error.errors.email !== undefined) {
-            reject(authError.invalidEmail);
+            reject({ errors: [authError.emailAlreadyExist] });
           } else {
-            //TODO: Internal server error
-            reject(error);
+            console.log(authError.internalServerError, ": ", error);
+            reject(authError.internalServerError);
           }
         });
     });
