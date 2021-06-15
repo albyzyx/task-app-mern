@@ -23,7 +23,7 @@ router.post(
   }
 );
 
-router.get("/api/auth/signin", authErrorHandler.signIn, async (req, res) => {
+router.post("/api/auth/signin", authErrorHandler.signIn, async (req, res) => {
   Auth.signInWithEmailAndPassword(req.body.email, req.body.password)
     .then((payload) => {
       res.send(payload);
@@ -42,6 +42,25 @@ router.post("/api/auth/signout", authenticateRequest, async (req, res) => {
       res.status(400).send({ error });
     });
 });
+
+router.patch(
+  "/api/auth/changepassword",
+  authenticateRequest,
+  authErrorHandler.changePassword,
+  (req, res) => {
+    Auth.changePassword(
+      req.user,
+      req.body.currentPassword,
+      req.body.newPassword
+    )
+      .then(() => {
+        res.send({ message: "user-password-changed" });
+      })
+      .catch((error) => {
+        res.status(400).send({ error });
+      });
+  }
+);
 
 router.delete(
   "/api/auth/delete",

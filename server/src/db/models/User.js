@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const authError = require("../Auth/authErrors");
+const authError = require("../../Auth/authErrors");
 
 const userSchema = new mongoose.Schema({
   displayName: {
@@ -67,12 +67,46 @@ userSchema.statics.findByCredentials = (email, password) => {
   });
 };
 
+userSchema.methods.updateUser = function (updates) {
+  return new Promise((resolve, reject) => {
+    const allowedUpdates = ["displayName"];
+    const updateKeys = Object.keys(updates);
+    const isValidRequest = updateKeys.every((update) =>
+      allowedUpdates.includes(update)
+    );
+    if (isValidRequest) {
+      const user = this;
+      updateKeys.forEach((key) => (user[key] = updates[key]));
+      user
+        .save()
+        .then(() => resolve(user))
+        .catch(() => reject());
+    } else if (updateKeys.length !== 0) {
+      reject({ error: "request/invalid-field" });
+    }
+    reject();
+  });
+};
+
 userSchema.methods.generateJWT = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "abc123");
   user.tokens.push({ token });
   await user.save();
   return token;
+};
+
+userSchema.methods.verifyCredentials = function (password) {
+  return new Promise((resolve, reject) => {
+    const user = this;
+    bcrypt.compare(password, user.password).then((isPasswordMatch) => {
+      if (!isPasswordMatch) {
+        reject(authError.invalidCredentials);
+      } else {
+        resolve();
+      }
+    });
+  });
 };
 
 userSchema.methods.toJSON = function () {

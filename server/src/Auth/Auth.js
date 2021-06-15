@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../db/models/User");
 const authError = require("./authErrors");
 class Auth {
   static createUserWithEmailAndPassword(displayName, email, password) {
@@ -22,6 +22,18 @@ class Auth {
             reject(authError.internalServerError);
           }
         });
+    });
+  }
+
+  static changePassword(user, currentPassword, newPassword) {
+    return new Promise((resolve, reject) => {
+      user
+        .verifyCredentials(currentPassword)
+        .then(() => {
+          user.password = newPassword;
+          user.save().then(() => resolve());
+        })
+        .catch((error) => reject(error));
     });
   }
 

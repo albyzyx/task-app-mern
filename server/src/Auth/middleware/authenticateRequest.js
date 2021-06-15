@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
-
+const User = require("../../db/models/User");
+const authError = require("../authErrors");
 const authenticateRequest = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
@@ -16,7 +16,7 @@ const authenticateRequest = async (req, res, next) => {
     req.token = token;
     next();
   } catch (error) {
-    res.status(401).send({ error: "auth/not-authenticated" });
+    res.status(401).send({ errors: [authError.notAuthenticated] });
   }
 };
 

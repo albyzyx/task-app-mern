@@ -10,6 +10,8 @@ const authError = {
   displayNameMissing: "request/display-name-required",
   passwordMissing: "request/password-required",
   emailMissing: "request/email-required",
+  newPasswordMissing: "request/new-password-required",
+  currentPasswordMissing: "request/current-password-required",
 };
 //TODO: Bad request
 module.exports = authError;

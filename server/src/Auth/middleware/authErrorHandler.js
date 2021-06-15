@@ -1,5 +1,5 @@
 const authError = require("../authErrors");
-const User = require("../../models/User");
+const User = require("../../db/models/User");
 const validator = require("validator");
 
 const authErrorHandler = {
@@ -44,6 +44,29 @@ const authErrorHandler = {
     } else {
       next();
     }
+  },
+  changePassword: (req, res, next) => {
+    let errors = [];
+    const requiredFields = ["currentPassword", "newPassword"];
+    for (const field of requiredFields) {
+      if (req.body[field] === undefined) {
+        errors.push(authError[field + "Missing"]);
+      }
+    }
+    if (req.body.newPassword && req.body.newPassword.length < 7) {
+      errors.push(authError.passwordTooShort);
+    }
+    if (errors.length !== 0) {
+      res.status(400).send({ errors });
+    } else {
+      next();
+    }
+  },
+  changeEmail: (req, res, next) => {
+    if (req.body.email === undefined) {
+      res.status(400).send({ error: authError.passwordMissing });
+    }
+    next();
   },
   deleteAccount: (req, res, next) => {
     let errors = [];
