@@ -15,8 +15,8 @@ import {
 const Login = ({ onLogin }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser());
-  const error = useSelector(selectError());
+  const user = useSelector(selectUser);
+  const error = useSelector(selectError);
   const userForm = {
     email: "",
     password: "",
