@@ -80,11 +80,10 @@ userSchema.methods.updateUser = function (updates) {
       user
         .save()
         .then(() => resolve(user))
-        .catch(() => reject());
+        .catch((error) => reject(error));
     } else if (updateKeys.length !== 0) {
       reject({ error: "request/invalid-field" });
     }
-    reject();
   });
 };
 

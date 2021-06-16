@@ -7,13 +7,14 @@ router.get("/api/user/me", authenticateRequest, (req, res) => {
   res.send(req.user);
 });
 
-router.post("/api/user/me", authenticateRequest, (req, res) => {
+router.patch("/api/user/me", authenticateRequest, (req, res) => {
   req.user
     .updateUser(req.body)
     .then((user) => {
       res.send(user);
     })
     .catch((error) => {
+      console.log(error);
       res.status(400).send(error);
     });
 });
