@@ -1,0 +1,119 @@
+Components: 
+    Login
+      |
+    Register
+
+    Home
+        Header
+        task card
+            task-individual
+
+    About
+
+  
+    Header                      ------------------     About            And           Home
+      Name                                                
+      buttons
+        signout
+        number of tasks
+        About                                           home                           About
+
+
+    task card 
+      outer border of the card
+      card Header 
+        date 
+        add button
+
+    task-individual
+      right margin dynamic (priority)
+      the description
+      deadline time
+      trash icon for deleting
+
+
+      About 
+        Header  
+        an svg
+        created with mern
+        git-hub repo
+
+
+Api Calls: 
+
+Related to User: 
+    Create user --> sending name,email,password  ---->  receiving token
+    Login user --> sending email, password ----> validating -----> receiving token
+    LogOut ----> calling the api -----> getting the static response
+
+Related to tasks:
+  get tasks  ----> use the token ----> fetch the tasks ----> group the tasks according to the date created  ----> display
+  create tasks ---> send the description, priority, deadline -----> using the userid ----> get the static response
+  delete tasks ---> send the user id and and task object id -----> get the static response
+
+
+middleware:
+
+The result from the API calls are sent to these middleware and is used to set the state
+
+  userSlice - managing the user state
+
+  taskSlice - managing the task state
+
+These states are used to change the ui 
+
+
+Static Components: 
+    About 
+    Login
+    Register
+
+Dynamic Components:
+
+  Home 
+    Header  
+      task card
+        task-individual
+
+  Header
+    hello 
+      buttons 
+
+
+        static Buttons: 
+          LogOut
+          About 
+          Home
+
+        Dynamic Buttons: 
+          Tasks
+
+
+Login components || Register Component  
+                        ----> Auth (through login and register api calls)
+                                    ----> Authenticates and returns user 
+                                                ----> userSlice
+                                                      ----> used by the home and header components
+
+Tasks: 
+  Task-API calls
+      |
+      |   sends tasks
+      |
+      V
+  taskSlice
+      |
+      |   sets the state
+      |
+      V
+  tasks - card
+      |
+      |   maps the individual tasks from the state to the task-individual component 
+      |
+      V
+  task-individual
+  
+
+
+
+
