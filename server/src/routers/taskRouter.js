@@ -19,4 +19,36 @@ router.post(
   }
 );
 
+router.get("/api/tasks", authenticateRequest, (req, res) => {
+  Tasks.getAllTasks(req)
+    .then((tasks) => {
+      tasks._id = undefined;
+      tasks.__v = undefined;
+      res.send(tasks);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.patch("/api/tasks", authenticateRequest, (req, res) => {
+  Tasks.updateTask(req)
+    .then((task) => {
+      res.send(task);
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
+router.delete("/api/tasks", authenticateRequest, (req, res) => {
+  Tasks.deleteTask(req)
+    .then(() => {
+      res.send({ status: "OK" });
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
 module.exports = router;

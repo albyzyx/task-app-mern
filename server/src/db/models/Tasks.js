@@ -39,7 +39,7 @@ tasksSchema.statics.addNewTask = function (uID, task) {
     const id = mongoose.Types.ObjectId();
 
     task._id = id;
-    console.log(task);
+    // console.log(task);
     this.findById(uID)
       .then((tasksObject) => {
         if (tasksObject) {
@@ -71,6 +71,39 @@ tasksSchema.statics.addNewTask = function (uID, task) {
         //Internal Server Error- Database Error
         reject();
       });
+  });
+};
+
+tasksSchema.methods.updateTask = function (index, updates) {
+  return new Promise((resolve, reject) => {
+    const task = this;
+    const allowedUpdates = [
+      "description",
+      "completed",
+      "important",
+      "deadline",
+    ];
+    const updateKeys = Object.keys(updates);
+    const isValidUpdate = updateKeys.every((updateKey) =>
+      allowedUpdates.includes(updateKey)
+    );
+    if (isValidUpdate) {
+      updateKeys.forEach((updateKey) => {
+        task.tasks[index][updateKey] = updates[updateKey];
+      });
+      task.save().then((tasks) => {
+        resolve(tasks.tasks[index]);
+      });
+    } else {
+      //bad request
+      reject();
+    }
+  });
+};
+
+tasksSchema.methods.removeTask = function (index) {
+  return new Promise((resolve, reject) => {
+    const task = this;
   });
 };
 
