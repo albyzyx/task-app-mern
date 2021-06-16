@@ -13,14 +13,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserLoginDetails: (state, action) => {
-      auth
-        .SignIn(action.payload.user)
-        .then((currentUser) => {
-          state.user = currentUser;
-        })
-        .catch((error) => {
-          state.error = error;
-        });
+      console.log(action.payload);
+      try {
+        const res = auth.signIn(action.payload);
+        state.user = res;
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     setSignOutState: (state, action) => {

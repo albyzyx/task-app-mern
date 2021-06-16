@@ -59,7 +59,7 @@ const Login = ({ onLogin }) => {
     <LoginContainer>
       <LoginBox>
         <Container>
-          <Form onSubmit={onSubmit}>
+          <Form>
             <span>Login</span>
             <img src={loginImg} alt="login.svg" />
             <Content>
@@ -69,7 +69,7 @@ const Login = ({ onLogin }) => {
                   name="email"
                   type="text"
                   placeholder="Email"
-                  value={userForm.email}
+                  // value={userForm.email}
                   onChange={(e) => (userForm.email = e.target.value)}
                   required
                 />
@@ -80,14 +80,14 @@ const Login = ({ onLogin }) => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  value={userForm.password}
+                  // value={userForm.password}
                   onChange={(e) => (userForm.password = e.target.value)}
                   required
                 />
               </Wrap>
             </Content>
             <SubmitButton>
-              <input type="submit" value="Login" />
+              <input type="submit" value="Login" onClick={onSubmit} />
             </SubmitButton>
             <Footer>
               <label htmlFor="register-link">

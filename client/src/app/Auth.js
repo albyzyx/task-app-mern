@@ -5,23 +5,40 @@ class AuthClass {
     console.log("this is a thing");
   }
 
-  async signIn({ email, password }) {
-    await axios
-      .post("/login", {
-        email,
-        password,
-      })
-      .then((response) => {
-        return response;
-      })
-      .catch((error) => {
-        return error;
+  async signIn(req) {
+    // axios
+    //   .post("http://localhost:8080/auth/signin", {
+    //     email,
+    //     password,
+    //   })
+    //   .then((response) => {
+    //     return response;
+    //   })
+    //   .catch((error) => {
+    //     return new Error(error);
+    //   });
+    try {
+      let res = await fetch("http://localhost:8080/auth/signin", {
+        method: "POST",
+        headers: {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        },
+        body: JSON.stringify(req),
       });
+      let currentUser = await res.json();
+
+      console.log(currentUser);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  async SignUp({ displayname, email, password }) {
-    await axios
-      .post("./register", {
+  SignUp({ displayname, email, password }) {
+    axios
+      .post("/auth/signup", {
         displayname,
         email,
         password,
@@ -34,9 +51,9 @@ class AuthClass {
       });
   }
 
-  async SignOut() {
-    await axios
-      .post("/logout")
+  SignOut() {
+    axios
+      .post("/auth/signout")
       .then((response) => {
         return response;
       })

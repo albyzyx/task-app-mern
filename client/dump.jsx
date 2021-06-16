@@ -11,20 +11,20 @@ const handleRegister = async ({ username, email, password }) => {
   setUser(req);
   console.log(user);
 
-  // try {
-  //   let res = await fetch("/api/users", {
-  //     method: "POST",
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(req),
-  //   });
-  //   let currentUser = await res.json();
+  try {
+    let res = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(req),
+    });
+    let currentUser = await res.json();
 
-  //   console.log(currentUser);
-  // } catch (error) {
-  //   console.log(error);
-  // }
+    console.log(currentUser);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const handleLogin = async ({ email, password }) => {
