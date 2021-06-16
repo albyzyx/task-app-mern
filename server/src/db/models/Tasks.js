@@ -37,7 +37,9 @@ const tasksSchema = new mongoose.Schema({
 tasksSchema.statics.addNewTask = function (uID, task) {
   return new Promise((resolve, reject) => {
     const id = mongoose.Types.ObjectId();
+
     task._id = id;
+    console.log(task);
     this.findById(uID)
       .then((tasksObject) => {
         if (tasksObject) {
@@ -51,14 +53,14 @@ tasksSchema.statics.addNewTask = function (uID, task) {
               reject();
             });
         } else {
-          const task = new this({
+          task = new this({
             _id: uID,
             tasks: [task],
           });
           task
             .save()
-            .then((task) => {
-              resolve(task);
+            .then((tasks) => {
+              resolve(tasks.tasks.find((element) => element._id === id));
             })
             .catch(() => {
               reject();
