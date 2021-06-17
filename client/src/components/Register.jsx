@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import loginImg from "./images/login.svg";
 import {
@@ -11,37 +11,55 @@ import {
   Footer,
   Form,
 } from "./Login";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import {
+  setSignUpState,
+  selectUser,
+  selectError,
+} from "../features/users/userSlice";
 
 const Register = ({ onRegister }) => {
-  const [username, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(false);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const error = useSelector(selectError);
+  const userForm = {
+    displayName: "",
+    email: "",
+    password: "",
+  };
+
+  useEffect(() => {}, [user]);
+
+  const setUser = (user) => {
+    dispatch(setSignUpState(user));
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!userForm.email) {
       alert("Please Enter an Email");
       return;
     }
 
-    if (!password) {
+    if (!userForm.password) {
       alert("Please Enter a Password");
       return;
     }
 
-    onRegister({ username, email, password });
-
-    setUser(true);
-
-    setName("");
-    setEmail("");
-    setPassword("");
+    setUser(userForm);
+    if (user) {
+      history.push("/");
+    }
+    userForm.setName("");
+    userForm.setEmail("");
+    userForm.setPassword("");
   };
 
-  if (user) {
-    return <Redirect to="/" />;
+  if (error) {
+    alert(error);
   }
 
   return (
@@ -58,8 +76,8 @@ const Register = ({ onRegister }) => {
                   name="username"
                   type="text"
                   placeholder="Name"
-                  value={username}
-                  onChange={(e) => setName(e.target.value)}
+                  // value={username}
+                  onChange={(e) => (userForm.displayName = e.target.value)}
                 />
               </Wrap>
               <Wrap>
@@ -68,8 +86,8 @@ const Register = ({ onRegister }) => {
                   name="email"
                   type="text"
                   placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  // value={email}
+                  onChange={(e) => (userForm.email = e.target.value)}
                   required
                 />
               </Wrap>
@@ -79,8 +97,8 @@ const Register = ({ onRegister }) => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  // value={password}
+                  onChange={(e) => (userForm.password = e.target.value)}
                   required
                 />
               </Wrap>

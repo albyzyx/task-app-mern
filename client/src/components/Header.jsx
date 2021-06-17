@@ -1,17 +1,24 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { selectUser } from "../features/users/userSlice";
+import { useEffect } from "react";
 
 const Header = () => {
+  const user = useSelector(selectUser);
+  console.log(user.user.displayName);
   return (
-    <Container>
-      <h1>Hello !</h1>
-      <ButtonPanel>
-        <button>Logout</button>
-        <Link to="/about">
-          <button>About</button>
-        </Link>
-      </ButtonPanel>
-    </Container>
+    user && (
+      <Container>
+        <h1>Hello {user.user.displayName}!</h1>
+        <ButtonPanel>
+          <button>Logout</button>
+          <Link to="/about">
+            <button>About</button>
+          </Link>
+        </ButtonPanel>
+      </Container>
+    )
   );
 };
 

@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import loginImg from "./images/login.svg";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
   setUserLoginDetails,
-  setSignOutState,
-  setSignUpState,
   selectUser,
   selectError,
 } from "../features/users/userSlice";
@@ -50,6 +48,10 @@ const Login = ({ onLogin }) => {
     userForm.email = "";
     userForm.password = "";
   };
+
+  if (user) {
+    history.push("/");
+  }
 
   if (error) {
     alert(error);
