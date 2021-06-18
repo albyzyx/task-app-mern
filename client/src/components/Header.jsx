@@ -6,11 +6,15 @@ import { useEffect } from "react";
 
 const Header = () => {
   const user = useSelector(selectUser);
-  console.log(user.user.displayName);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
     user && (
       <Container>
-        <h1>Hello {user.user.displayName}!</h1>
+        <h1>Hello !</h1>
         <ButtonPanel>
           <button>Logout</button>
           <Link to="/about">

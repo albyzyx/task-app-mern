@@ -4,7 +4,7 @@ import taskReducer from "../features/tasks/taskSlice";
 
 export default configureStore({
   reducer: {
-    users: userReducer,
+    userState: userReducer,
     tasks: taskReducer,
   },
   middleware: getDefaultMiddleware({

@@ -13,19 +13,17 @@ import {
 const Login = ({ onLogin }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+  const userState = useSelector(selectUser);
   const error = useSelector(selectError);
   const userForm = {
     email: "",
     password: "",
   };
+  let log = false;
 
-  useEffect(() => {
-    if (user) {
-      setUser(user);
-      history.push("/");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (userState) log = true;
+  // }, [userState]);
 
   const setUser = (user) => {
     dispatch(setUserLoginDetails(user));
@@ -45,16 +43,15 @@ const Login = ({ onLogin }) => {
     }
 
     setUser(userForm);
+    console.log(userState);
+    if (userState) log = true;
     userForm.email = "";
     userForm.password = "";
   };
 
-  if (user) {
+  if (log) {
+    console.log(userState);
     history.push("/");
-  }
-
-  if (error) {
-    alert(error);
   }
 
   return (

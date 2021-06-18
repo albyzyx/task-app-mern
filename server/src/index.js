@@ -27,15 +27,6 @@ app.use(authRouter);
 app.use(userRouter);
 app.use(taskRouter);
 
-<<<<<<< HEAD
-=======
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
-
->>>>>>> ec7130dcdd92581a2c928631ff33eee6bacf8283
 app.get("/api/ping", (req, res) => {
   res.send(new Date().getTime().toString());
 });

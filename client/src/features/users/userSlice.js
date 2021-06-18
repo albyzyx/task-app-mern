@@ -3,7 +3,6 @@ import AuthClass from "../../app/Auth";
 
 const initialState = {
   user: null,
-  error: null,
 };
 
 const auth = new AuthClass();
@@ -40,20 +39,20 @@ const setSignUpState = createAsyncThunk("/api/auth/signup", async (user) => {
 });
 
 const userSlice = createSlice({
-  name: "user",
+  name: "userState",
   initialState,
   reducers: {},
   extraReducers: (builders) => {
     builders
       .addCase(setUserLoginDetails.fulfilled, (state, action) => {
-        state.users = action.payload;
-        console.log(state.users);
+        state.user = action.payload;
+        console.log(state.user);
       })
       .addCase(setSignOutState.fulfilled, (state, action) => {
-        state.users = action.payload;
+        state.user = action.payload;
       })
       .addCase(setSignUpState.fulfilled, (state, action) => {
-        state.users = action.payload;
+        state.user = action.payload;
       });
   },
 });
@@ -62,7 +61,7 @@ export { setUserLoginDetails, setSignOutState, setSignUpState };
 
 export const {} = userSlice.actions;
 
-export const selectUser = (state) => state.users;
+export const selectUser = (state) => state.userState;
 export const selectError = (state) => state.error;
 
 export default userSlice.reducer;
