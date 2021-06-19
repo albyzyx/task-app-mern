@@ -89,7 +89,8 @@ class AuthClass {
   isLoggedIn() {
     console.log("in is logged in in auth");
     return new Promise(async (resolve, reject) => {
-      if (localStorage.getItem("token"))
+      if (localStorage.getItem("token")) {
+        console.log("inside the if of islooged in");
         try {
           const response = await fetch("api/user/me", {
             method: "GET",
@@ -110,6 +111,9 @@ class AuthClass {
         } catch (error) {
           reject(error);
         }
+      } else {
+        reject();
+      }
     });
   }
 }
