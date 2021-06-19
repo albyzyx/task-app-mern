@@ -1,28 +1,61 @@
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { selectUser } from "../features/users/userSlice";
-import { useEffect } from "react";
+import { selectUser, signOut, clearState } from "../features/users/userSlice";
 
 const Header = () => {
-  const user = useSelector(selectUser);
+  const { user, isError, isSuccess, error } = useSelector(selectUser);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [onHome, setOnHome] = useState(false);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  const onSignOut = () => {
+    dispatch(signOut());
+    if (isSuccess) {
+      dispatch(clearState());
+      toast.success("Logged Out");
+      history.push("/login");
+    }
+    if (isError) {
+      toast.error(error.error);
+      dispatch(clearState());
+    }
+  };
+
+  const about = () => {
+    setOnHome(false);
+  };
+
+  const home = () => {
+    setOnHome(true);
+  };
 
   return (
-    user && (
-      <Container>
-        <h1>Hello !</h1>
-        <ButtonPanel>
-          <button>Logout</button>
+    <Container>
+      <h1>Hello {user.displayName} !</h1>
+      <ButtonPanel>
+        <button onClick={onSignOut}>Logout</button>
+        {onHome ? (
           <Link to="/about">
-            <button>About</button>
+            <button onClick={about}>About</button>
           </Link>
-        </ButtonPanel>
-      </Container>
-    )
+        ) : (
+          <Link to="/">
+            <button onClick={home}>Home</button>
+          </Link>
+        )}
+      </ButtonPanel>
+      <ToastContainer
+        position="top-center"
+        autoClose={8000}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
+    </Container>
   );
 };
 

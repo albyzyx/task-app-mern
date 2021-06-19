@@ -1,60 +1,75 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import loginImg from "./images/login.svg";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
-  setUserLoginDetails,
+  signIn,
   selectUser,
-  selectError,
+  clearState,
+  isLoggedIn,
 } from "../features/users/userSlice";
+import Loading from "./Loading";
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const userState = useSelector(selectUser);
-  const error = useSelector(selectError);
-  const userForm = {
-    email: "",
-    password: "",
-  };
-  let log = false;
+  const { user, isError, isSuccess, isFetching, error } =
+    useSelector(selectUser);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // useEffect(() => {
-  //   if (userState) log = true;
-  // }, [userState]);
+  useEffect(() => {
+    if (isSuccess) {
+      history.push("/");
+    }
+    if (!user) {
+      dispatch(isLoggedIn());
+    }
+    if (isError) {
+      if (error.error) {
+        toast.error(error.error);
+        return dispatch(clearState());
+      }
+      error.errors.map((error) => {
+        return toast.error(error);
+      });
+      dispatch(clearState());
+    }
+  }, [user, isError]);
 
-  const setUser = (user) => {
-    dispatch(setUserLoginDetails(user));
+  const setUser = (email, password) => {
+    const user = {
+      email,
+      password,
+    };
+    dispatch(signIn(user));
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!userForm.email) {
-      alert("Please Enter an Email");
+    if (!email) {
+      toast.warn("Please enter an email");
       return;
     }
 
-    if (!userForm.password) {
-      alert("Please Enter a Password");
+    if (!password) {
+      toast.warn("Please enter a password");
       return;
     }
 
-    setUser(userForm);
-    console.log(userState);
-    if (userState) log = true;
-    userForm.email = "";
-    userForm.password = "";
+    setUser(email, password);
+    setEmail("");
+    setPassword("");
   };
 
-  if (log) {
-    console.log(userState);
-    history.push("/");
-  }
-
-  return (
+  return isFetching ? (
+    <Loading />
+  ) : (
     <LoginContainer>
       <LoginBox>
         <Container>
@@ -68,8 +83,8 @@ const Login = ({ onLogin }) => {
                   name="email"
                   type="text"
                   placeholder="Email"
-                  // value={userForm.email}
-                  onChange={(e) => (userForm.email = e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Wrap>
@@ -79,8 +94,8 @@ const Login = ({ onLogin }) => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  // value={userForm.password}
-                  onChange={(e) => (userForm.password = e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Wrap>
@@ -99,6 +114,12 @@ const Login = ({ onLogin }) => {
           </Form>
         </Container>
       </LoginBox>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
     </LoginContainer>
   );
 };

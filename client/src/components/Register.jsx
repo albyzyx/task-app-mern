@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import loginImg from "./images/login.svg";
 import {
   LoginContainer,
@@ -13,60 +13,70 @@ import {
 } from "./Login";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import {
-  setSignUpState,
-  selectUser,
-  selectError,
-} from "../features/users/userSlice";
+import { selectUser, signUp, clearState } from "../features/users/userSlice";
+import Loading from "./Loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = ({ onRegister }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-  const error = useSelector(selectError);
-  const userForm = {
-    displayName: "",
-    email: "",
-    password: "",
-  };
+  const { isError, isSuccess, isFetching, error } = useSelector(selectUser);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
-  useEffect(() => {}, [user]);
+  useEffect(() => {
+    if (isSuccess) {
+      history.push("/");
+    }
+    if (isError) {
+      error.errors.map((error) => {
+        return toast.error(error);
+      });
+      dispatch(clearState());
+    }
+  }, [isSuccess, isError]);
 
-  const setUser = (user) => {
-    dispatch(setSignUpState(user));
+  const setUser = (userName, email, password) => {
+    const user = {
+      displayName,
+      email,
+      password,
+    };
+    dispatch(signUp(user));
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!userForm.email) {
-      alert("Please Enter an Email");
+    if (!displayName) {
+      toast.warn("Please enter a user name");
+    }
+
+    if (!email) {
+      toast.warn("Please enter an email");
       return;
     }
 
-    if (!userForm.password) {
-      alert("Please Enter a Password");
+    if (!password) {
+      toast.warn("Please enter a password");
       return;
     }
 
-    setUser(userForm);
-    if (user) {
-      history.push("/");
-    }
-    userForm.setName("");
-    userForm.setEmail("");
-    userForm.setPassword("");
+    setUser(displayName, email, password);
+    setDisplayName("");
+    setEmail("");
+    setPassword("");
   };
 
-  if (error) {
-    alert(error);
-  }
-
-  return (
+  return isFetching ? (
+    <Loading />
+  ) : (
     <LoginContainer>
       <LoginBox>
         <Container>
-          <Form onSubmit={onSubmit}>
+          <Form>
             <span>Register</span>
             <img src={loginImg} alt="login.svg" />
             <Content>
@@ -76,8 +86,9 @@ const Register = ({ onRegister }) => {
                   name="username"
                   type="text"
                   placeholder="Name"
-                  // value={username}
-                  onChange={(e) => (userForm.displayName = e.target.value)}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
                 />
               </Wrap>
               <Wrap>
@@ -86,8 +97,8 @@ const Register = ({ onRegister }) => {
                   name="email"
                   type="text"
                   placeholder="Email"
-                  // value={email}
-                  onChange={(e) => (userForm.email = e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Wrap>
@@ -97,14 +108,14 @@ const Register = ({ onRegister }) => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  // value={password}
-                  onChange={(e) => (userForm.password = e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Wrap>
             </Content>
             <SubmitButton>
-              <input type="submit" value="Register" className="btn" />
+              <input type="submit" value="Register" onClick={onSubmit} />
             </SubmitButton>
             <Footer>
               <label htmlFor="register-link">
@@ -117,6 +128,12 @@ const Register = ({ onRegister }) => {
           </Form>
         </Container>
       </LoginBox>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
     </LoginContainer>
   );
 };
