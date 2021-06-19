@@ -121,6 +121,7 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
+      state.user = null;
     },
     [signOut.rejected]: (state, { payload }) => {
       state.isFetching = false;

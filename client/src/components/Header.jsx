@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import { selectUser, signOut, clearState } from "../features/users/userSlice";
@@ -16,9 +16,9 @@ const Header = () => {
   const onSignOut = () => {
     dispatch(signOut());
     if (isSuccess) {
-      dispatch(clearState());
+      // dispatch(clearState());
       toast.success("Logged Out");
-      history.push("/login");
+      // history.push("/login");
     }
     if (isError) {
       toast.error(error.error);
@@ -33,6 +33,10 @@ const Header = () => {
   const home = () => {
     setOnHome(true);
   };
+
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <Container>
