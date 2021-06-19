@@ -5,7 +5,7 @@ import Header from "./Header";
 const About = () => {
   return (
     <Container>
-      <Header />
+      {/* <Header /> */}
       <span>ABOUT US</span>
     </Container>
   );

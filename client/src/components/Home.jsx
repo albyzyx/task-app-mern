@@ -24,7 +24,7 @@ const Home = () => {
     <Loading />
   ) : (
     <div>
-      <Header displayName={userName} />
+      {/* <Header /> */}
       <Tasks />
     </div>
   );

@@ -11,7 +11,7 @@ const Header = () => {
   const { user, isError, isSuccess, error } = useSelector(selectUser);
   const history = useHistory();
   const dispatch = useDispatch();
-  const [onHome, setOnHome] = useState(false);
+  const [onHome, setOnHome] = useState(true);
 
   const onSignOut = () => {
     dispatch(signOut());
@@ -27,10 +27,12 @@ const Header = () => {
   };
 
   const about = () => {
+    // console.log("onabout");
     setOnHome(false);
   };
 
   const home = () => {
+    // console.log("onhome");
     setOnHome(true);
   };
 

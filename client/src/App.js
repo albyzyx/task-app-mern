@@ -10,12 +10,14 @@ import Register from "./components/Register.jsx";
 import Home from "./components/Home.jsx";
 import About from "./components/About.jsx";
 import Loading from "./components/Loading.jsx";
+import Header from "./components/Header";
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route exact path="/">
+          <Header />
           <Home />
         </Route>
         <Route path="/register">
@@ -25,6 +27,7 @@ function App() {
           <Login />
         </Route>
         <Route path="/about">
+          <Header />
           <About />
         </Route>
         <Route path="/load">
