@@ -61,6 +61,7 @@ class AuthClass {
   }
 
   signOut() {
+    console.log("in signout in auth");
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch("api/auth/signout", {
@@ -86,27 +87,29 @@ class AuthClass {
   }
 
   isLoggedIn() {
+    console.log("in is logged in in auth");
     return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch("api/user/me", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        });
-        await response.json().then((data) => {
-          if (response.status === 200) {
-            console.log(data);
-            resolve(data);
-          } else {
-            reject(data);
-          }
-        });
-      } catch (error) {
-        reject(error);
-      }
+      if (localStorage.getItem("token"))
+        try {
+          const response = await fetch("api/user/me", {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
+          await response.json().then((data) => {
+            if (response.status === 200) {
+              console.log(data);
+              resolve(data);
+            } else {
+              reject(data);
+            }
+          });
+        } catch (error) {
+          reject(error);
+        }
     });
   }
 }
