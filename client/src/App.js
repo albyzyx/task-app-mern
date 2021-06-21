@@ -11,6 +11,7 @@ import Home from "./components/Home.jsx";
 import About from "./components/About.jsx";
 import Loading from "./components/Loading.jsx";
 import Header from "./components/Header";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -34,6 +35,17 @@ function App() {
           <Loading />
         </Route>
       </Switch>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Router>
   );
 }

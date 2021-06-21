@@ -1,21 +1,56 @@
 import styled from "styled-components";
 import Task from "./Task";
 import AddTask from "./AddTask";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
+import {
+  getTasks,
+  selectTasks,
+  clearTaskState,
+} from "../features/tasks/taskSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const Tasks = () => {
+  const dispatch = useDispatch();
+  const [showAddTask, setShowAddTask] = useState(false);
+  const { tasks, isSuccess, isError, error } = useSelector(selectTasks);
+
+  useEffect(() => {
+    dispatch(getTasks());
+  }, []); //eslint-disable-line
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Tasks Fetched!");
+    }
+    if (isError) {
+      toast.error(error);
+      dispatch(clearTaskState());
+      return;
+    }
+  }, [isSuccess, isError]); //eslint-disable-line
+
+  const onAddTask = () => {
+    setShowAddTask(!showAddTask);
+  };
+
   return (
     <Container>
       <Card>
         <CardHeader>
           <Date>Date</Date>
-          <AddButton>Add Task</AddButton>
+          <AddButton onClick={onAddTask}>Add Task</AddButton>
         </CardHeader>
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <AddTask />
+        {showAddTask && <AddTask addTask={showAddTask} />}
+        {tasks.map((task) => {
+          return (
+            <div key={task._id}>
+              <Task id={task._id} />
+            </div>
+          );
+        })}
       </Card>
     </Container>
   );

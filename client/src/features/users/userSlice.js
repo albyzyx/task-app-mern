@@ -53,7 +53,6 @@ const isLoggedIn = createAsyncThunk("/api/auth/isLoggedin", (thunkAPI) => {
     await auth
       .isLoggedIn()
       .then((user) => {
-        console.log(user);
         resolve(user);
       })
       .catch((error) => {
@@ -139,7 +138,6 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
-      console.log(payload);
       state.user = payload;
     },
     [isLoggedIn.rejected]: (state) => {

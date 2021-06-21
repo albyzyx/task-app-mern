@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser, signUp, clearState } from "../features/users/userSlice";
 import Loading from "./Loading";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = ({ onRegister }) => {
@@ -31,12 +31,13 @@ const Register = ({ onRegister }) => {
       history.push("/");
     }
     if (isError) {
+      console.log(error);
       error.errors.map((error) => {
         return toast.error(error);
       });
       dispatch(clearState());
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError]); //eslint-disable-line
 
   const setUser = (userName, email, password) => {
     const user = {
@@ -52,6 +53,7 @@ const Register = ({ onRegister }) => {
 
     if (!displayName) {
       toast.warn("Please enter a user name");
+      return;
     }
 
     if (!email) {
@@ -128,12 +130,6 @@ const Register = ({ onRegister }) => {
           </Form>
         </Container>
       </LoginBox>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </LoginContainer>
   );
 };

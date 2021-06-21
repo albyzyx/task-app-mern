@@ -1,39 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Link, Redirect } from "react-router-dom";
-import { useHistory } from "react-router";
 import styled from "styled-components";
-import { selectUser, signOut, clearState } from "../features/users/userSlice";
+import { selectUser, signOut } from "../features/users/userSlice";
 
 const Header = () => {
-  const { user, isError, isSuccess, error } = useSelector(selectUser);
-  const history = useHistory();
+  const { user } = useSelector(selectUser);
   const dispatch = useDispatch();
   const [onHome, setOnHome] = useState(true);
 
   const onSignOut = () => {
     dispatch(signOut());
-    if (isSuccess) {
-      // dispatch(clearState());
-      toast.success("Logged Out");
-      // history.push("/login");
-    }
-    if (isError) {
-      toast.error(error.error);
-      dispatch(clearState());
-    }
-  };
-
-  const about = () => {
-    // console.log("onabout");
-    setOnHome(false);
-  };
-
-  const home = () => {
-    // console.log("onhome");
-    setOnHome(true);
   };
 
   if (!user) {
@@ -47,20 +24,14 @@ const Header = () => {
         <button onClick={onSignOut}>Logout</button>
         {onHome ? (
           <Link to="/about">
-            <button onClick={about}>About</button>
+            <button onClick={() => setOnHome(false)}>About</button>
           </Link>
         ) : (
           <Link to="/">
-            <button onClick={home}>Home</button>
+            <button onClick={() => setOnHome(true)}>Home</button>
           </Link>
         )}
       </ButtonPanel>
-      <ToastContainer
-        position="top-center"
-        autoClose={8000}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </Container>
   );
 };

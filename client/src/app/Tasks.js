@@ -1,25 +1,22 @@
-class AuthClass {
+class TaskClass {
   constructor() {
     console.log();
   }
 
-  signIn({ email, password }) {
+  createTask(task) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("api/auth/signin", {
+        const response = await fetch("api/tasks", {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
+          body: JSON.stringify(task),
         });
         await response.json().then((data) => {
           if (response.status === 200) {
-            localStorage.setItem("token", data.token);
             resolve(data);
           } else {
             reject(data);
@@ -31,40 +28,11 @@ class AuthClass {
     });
   }
 
-  signUp({ displayName, email, password }) {
+  getTasks() {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("api/auth/signup", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            displayName,
-            email,
-            password,
-          }),
-        });
-        await response.json().then((data) => {
-          if (response.status === 200) {
-            localStorage.setItem("token", data.token);
-            resolve(data);
-          } else {
-            reject(data);
-          }
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  signOut() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch("api/auth/signout", {
-          method: "POST",
+        const response = await fetch("api/tasks", {
+          method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -73,7 +41,6 @@ class AuthClass {
         });
         await response.json().then((data) => {
           if (response.status === 200) {
-            localStorage.removeItem("token");
             resolve(data);
           } else {
             reject(data);
@@ -85,33 +52,61 @@ class AuthClass {
     });
   }
 
-  isLoggedIn() {
+  deleteTasks(task) {
     return new Promise(async (resolve, reject) => {
-      if (localStorage.getItem("token")) {
-        try {
-          const response = await fetch("api/user/me", {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          });
-          await response.json().then((data) => {
-            if (response.status === 200) {
-              resolve(data);
-            } else {
-              reject(data);
-            }
-          });
-        } catch (error) {
-          reject(error);
-        }
-      } else {
-        reject();
+      try {
+        const response = await fetch("api/tasks", {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            id: task._id,
+          }),
+        });
+        await response.json().then((data) => {
+          if (response.status === 200) {
+            resolve(task);
+          } else {
+            reject(data);
+          }
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  updateTask({ id, completed, important }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch("api/tasks", {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            id,
+            completed,
+            important,
+          }),
+        });
+        await response.json().then((data) => {
+          if (response.status === 200) {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        });
+      } catch (error) {
+        reject(error);
       }
     });
   }
 }
 
-export default AuthClass;
+export default TaskClass;

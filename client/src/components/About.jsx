@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "./Header";
 
 const About = () => {
   return (
     <Container>
-      {/* <Header /> */}
       <span>ABOUT US</span>
     </Container>
   );

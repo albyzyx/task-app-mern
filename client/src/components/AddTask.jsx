@@ -1,44 +1,99 @@
 import React from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import { SubmitButton } from "./Login";
+import {
+  createTask,
+  selectTasks,
+  clearTaskState,
+} from "../features/tasks/taskSlice";
+import { useEffect } from "react";
 
-const AddTask = () => {
+const AddTask = ({ addTask }) => {
+  const dispatch = useDispatch();
+  const [description, setDesciption] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [important, setImportant] = useState();
+  const { isSuccess, isError, error } = useSelector(selectTasks);
+  const [showAddTask, setShowAddTask] = useState(addTask);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error);
+      dispatch(clearTaskState());
+      return;
+    }
+  }, [isError]); //eslint-disable-line
+
+  const setTask = ({ description, deadline, important }) => {
+    const task = {
+      description,
+      deadline,
+      important,
+    };
+    dispatch(createTask(task));
+    if (isSuccess) {
+      toast.success("Task Added!");
+      setShowAddTask(!showAddTask);
+    }
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!description) {
+      toast.warn("Please enter a Description");
+      return;
+    }
+    if (!deadline) {
+      toast.warn("Please enter a Deadline");
+      return;
+    }
+    setTask({ description, deadline, important });
+    setDesciption("");
+    setDeadline("");
+    setImportant(false);
+  };
   return (
-    <Container>
-      <Wrap>
-        <label htmlFor="description">Task</label>
-        <input
-          name="description"
-          type="text"
-          placeholder="Task Description"
-          //   value={}
-          //   onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </Wrap>
-      <Wrap>
-        <label htmlFor="Deadline">Deadline</label>
-        <input
-          name="deadline"
-          type="datetime-local"
-          //   value={}
-          //   onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </Wrap>
-      <Wrap>
-        <label htmlFor="priority">Prioritize</label>
-        <input
-          name="priority"
-          type="checkbox"
-          //   value={}
-          //   onChange={(e) => setEmail(e.target.value)}
-        />
-      </Wrap>
-      <SubmitButton>
-        <input type="submit" value="ADD" />
-      </SubmitButton>
-    </Container>
+    showAddTask && (
+      <>
+        <Container>
+          <Wrap>
+            <label htmlFor="description">Task</label>
+            <input
+              name="description"
+              type="text"
+              placeholder="Task Description"
+              value={description}
+              onChange={(e) => setDesciption(e.target.value)}
+            />
+          </Wrap>
+          <Wrap>
+            <label htmlFor="Deadline">Deadline</label>
+            <input
+              name="deadline"
+              type="datetime-local"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+            />
+          </Wrap>
+          <Wrap>
+            <label htmlFor="priority">Prioritize</label>
+            <input
+              name="priority"
+              type="checkbox"
+              value={important}
+              onChange={(e) => setImportant(e.target.checked)}
+            />
+          </Wrap>
+          <SubmitButton>
+            <input type="submit" value="ADD" onClick={onSubmit} />
+          </SubmitButton>
+        </Container>
+      </>
+    )
   );
 };
 

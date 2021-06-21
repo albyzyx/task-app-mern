@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import loginImg from "./images/login.svg";
@@ -23,11 +23,14 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (isSuccess) {
-      history.push("/");
-    }
     if (!user) {
       dispatch(isLoggedIn());
+    }
+  }, [user]); //eslint-disable-line
+
+  useEffect(() => {
+    if (isSuccess) {
+      history.push("/");
     }
     if (isError) {
       if (error.error) {
@@ -39,7 +42,7 @@ const Login = ({ onLogin }) => {
       });
       dispatch(clearState());
     }
-  }, [user, isError]);
+  }, [isSuccess, isError]); //eslint-disable-line
 
   const setUser = (email, password) => {
     const user = {
@@ -114,12 +117,6 @@ const Login = ({ onLogin }) => {
           </Form>
         </Container>
       </LoginBox>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </LoginContainer>
   );
 };
