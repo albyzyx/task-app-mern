@@ -24,18 +24,16 @@ router.get("/api/tasks", authenticateRequest, (req, res) => {
     .then((tasks) => {
       tasks._id = undefined;
       tasks.__v = undefined;
-      // tempTasks = tasks.tasks;
-      // console.log(tasks.tasks[0].deadline);
-      // for (let i = 0; i < tasks.tasks.length; i++) {
-      //   const date = new Date.parse(tasks.tasks[i].deadline.slice(0, 10));
-      //   if (!tempTasks.hasOwnProperty(date)) {
-      //     tmpTasks[date] = [tasks.tasks[i]];
-      //   } else {
-      //     tmpTasks[date].push(tasks.tasks[i]);
-      //   }
-      // }
-      console.log(tasks);
-      res.send(tasks);
+      const tempTasks = {};
+      for (let i = 0; i < tasks.tasks.length; i++) {
+        const date = tasks.tasks[i].deadline.slice(0, 10);
+        if (!tempTasks.hasOwnProperty(date)) {
+          tempTasks[date] = [tasks.tasks[i]];
+        } else {
+          tempTasks[date].push(tasks.tasks[i]);
+        }
+      }
+      res.send(tempTasks);
     })
     .catch((error) => {
       res.status(400).send(error);

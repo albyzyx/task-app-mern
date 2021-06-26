@@ -1,6 +1,7 @@
 import React from "react";
 import { FaTrash } from "react-icons/fa";
 import styled from "styled-components";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectTasks,
@@ -12,7 +13,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Task = ({ id }) => {
+const Task = ({ id, date }) => {
   const { tasks, isSuccess, isError, error } = useSelector(selectTasks);
   const dispatch = useDispatch();
 
@@ -33,10 +34,9 @@ const Task = ({ id }) => {
   };
 
   const getDeadline = (deadline) => {
-    const res = new Date(deadline);
-    const date = res.toLocaleDateString();
-    const time = res.toLocaleTimeString();
-    return date + "  " + time;
+    // const res = new Date(deadline);
+    // const time = res.toLocaleTimeString();
+    return moment(deadline).format("LT");
   };
 
   const checkPriorityBorder = (task) => {
@@ -65,7 +65,7 @@ const Task = ({ id }) => {
     dispatch(updateTask(taskToUpdate));
   };
 
-  return tasks.map((task) => {
+  return tasks[date].map((task) => {
     return (
       task._id === id.toString() && (
         <Container

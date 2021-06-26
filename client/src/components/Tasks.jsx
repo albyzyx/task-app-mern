@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import Task from "./Task";
-import AddTask from "./AddTask";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import moment from "moment";
 import {
   getTasks,
   selectTasks,
@@ -14,8 +13,12 @@ import { useEffect } from "react";
 
 const Tasks = () => {
   const dispatch = useDispatch();
-  const [showAddTask, setShowAddTask] = useState(false);
   const { tasks, isSuccess, isError, error } = useSelector(selectTasks);
+  const dateInTasks = Object.keys(tasks);
+  dateInTasks.sort(function (a, b) {
+    return new Date(a).getTime() / 1000 - new Date(b).getTime() / 1000;
+  });
+  // console.log(dateInTasks);
 
   useEffect(() => {
     dispatch(getTasks());
@@ -32,28 +35,29 @@ const Tasks = () => {
     }
   }, [isSuccess, isError]); //eslint-disable-line
 
-  const onAddTask = () => {
-    setShowAddTask(!showAddTask);
+  const formatDate = (dateToBeFormatted) => {
+    // console.log(new Date(dateToBeFormatted).getTime() / 1000);
+    return moment(dateToBeFormatted).format("MMMM Do YYYY");
   };
 
-  return (
-    <Container>
-      <Card>
-        <CardHeader>
-          <Date>Date</Date>
-          <AddButton onClick={onAddTask}>Add Task</AddButton>
-        </CardHeader>
-        {showAddTask && <AddTask addTask={showAddTask} />}
-        {tasks.map((task) => {
-          return (
-            <div key={task._id}>
-              <Task id={task._id} />
-            </div>
-          );
-        })}
-      </Card>
-    </Container>
-  );
+  return dateInTasks.map((date) => {
+    return (
+      <Container key={date}>
+        <Card>
+          <CardHeader>
+            <ShowDate>{formatDate(date)}</ShowDate>
+          </CardHeader>
+          {tasks[date].map((task) => {
+            return (
+              <div key={task._id}>
+                <Task id={task._id} date={date} />
+              </div>
+            );
+          })}
+        </Card>
+      </Container>
+    );
+  });
 };
 
 const Container = styled.div`
@@ -64,6 +68,9 @@ const Container = styled.div`
   justify-content: center;
   background-color: mintcream;
   font-family: "Montserrat", sans-serif;
+  margin-top: 80px;
+  margin-bottom: -60px;
+  padding-bottom: 50px;
   /* transition: 1s;
 
   &:hover {
@@ -86,8 +93,6 @@ const Card = styled.div`
   box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
     rgb(0 0 0 / 73%) 0px 16px 10px -10px;
   text-align: center;
-  margin-bottom: 50px;
-  margin-top: 100px;
   position: relative;
   /* transition: 1s;
 
@@ -117,34 +122,11 @@ const CardHeader = styled.div`
   font-size: 38px;
 `;
 
-const Date = styled.span`
+const ShowDate = styled.span`
   margin: 0;
   padding: 18px 24px;
   position: relative;
   color: black;
-`;
-
-const AddButton = styled.button`
-  padding: 18px 24px;
-  margin: 15px;
-  border: none;
-  border-radius: 15px;
-  font-size: 26px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: transparent;
-    outline: none;
-  }
-
-  &:focus {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: transparent;
-    outline: none;
-  }
 `;
 
 export default Tasks;

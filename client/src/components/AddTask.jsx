@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DatePicker from "react-datepicker"; //eslint-disable-line
+import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 import { SubmitButton } from "./Login";
 import {
@@ -78,6 +80,15 @@ const AddTask = ({ addTask }) => {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
             />
+            {/* <DatePicker
+              required
+              selected={deadline}
+              onChange={(date) => setDeadline(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              minDate={new Date()}
+              placeholderText="Deadline"
+            /> */}
           </Wrap>
           <Wrap>
             <label htmlFor="priority">Prioritize</label>
@@ -99,11 +110,16 @@ const AddTask = ({ addTask }) => {
 
 const Container = styled.div`
   letter-spacing: 1.2px;
-  margin: 10px;
-  border: 2px solid black;
+  margin-top: 50px;
   border-radius: 10px;
   padding: 24px;
   font-size: 24px;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 15px;
+  background: white;
+  /* background: transparent; */
+  text-align: center;
+  font-size: 28px;
 `;
 
 const Wrap = styled.div`

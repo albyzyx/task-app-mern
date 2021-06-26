@@ -27,7 +27,7 @@ const getTasks = createAsyncThunk("/api/getTasks", (thunkAPI) => {
     await task
       .getTasks()
       .then((tasks) => resolve(tasks))
-      .catch((error) => reject(thunkAPI.rejectWithValue(error)));
+      .catch((error) => reject(error));
   });
 });
 
@@ -75,8 +75,12 @@ const taskSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
-      console.log(payload);
-      state.tasks.push(payload);
+      const date = payload.deadline.slice(0, 10);
+      if (!state.tasks.hasOwnProperty(date)) {
+        state.tasks[date] = [payload];
+      } else {
+        state.tasks[date].push(payload);
+      }
     },
     [createTask.rejected]: (state, { payload }) => {
       state.isFetching = false;
@@ -94,7 +98,7 @@ const taskSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
-      state.tasks = payload.tasks.map((task) => task);
+      state.tasks = payload;
     },
     [getTasks.rejected]: (state, { payload }) => {
       state.isFetching = false;
@@ -112,9 +116,11 @@ const taskSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
-      state.tasks = state.tasks.filter((task) => {
+      const date = payload.deadline.slice(0, 10);
+      state.tasks[date] = state.tasks[date].filter((task) => {
         return task._id !== payload._id;
       });
+      if (state.tasks[date].length === 0) delete state.tasks[date];
     },
     [deleteTask.rejected]: (state, { payload }) => {
       state.isFetching = false;
@@ -132,7 +138,8 @@ const taskSlice = createSlice({
       state.isFetching = false;
       state.isSuccess = true;
       state.isError = false;
-      state.tasks = state.tasks.map((task) => {
+      const date = payload.deadline.slice(0, 10);
+      state.tasks[date] = state.tasks[date].map((task) => {
         if (task._id === payload._id) return payload;
         else return task;
       });
