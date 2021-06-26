@@ -50,6 +50,7 @@ const Home = () => {
 };
 
 const Container = styled.div`
+  min-height: 100vh;
   background: url(${homeBackground});
   display: flex;
   flex-direction: column;
