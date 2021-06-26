@@ -10,7 +10,7 @@ const About = () => {
       <AboutContainer>
         <span>ABOUT US</span>
         <GithubIcon>
-          <a href="https://github.com/albyzyx/task-app-mern"><FaGithub
+          <a href="https://github.com/albyzyx/task-app-mern" rel="noreferrer" target="_blank"><FaGithub
             style={{
               cursor: "pointer",
               color: "black",
