@@ -5,7 +5,7 @@ const authRouter = require("./routers/authRouter");
 const userRouter = require("./routers/userRouter");
 const taskRouter = require("./routers/taskRouter");
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
